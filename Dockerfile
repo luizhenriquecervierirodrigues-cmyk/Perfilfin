@@ -5,13 +5,14 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libpq-dev \
     zip \
     unzip \
     git \
     curl
 
-# Instala extensões do PHP
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# Instala extensões do PHP (Adicionado pdo_pgsql para o banco do Render)
+RUN docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd
 
 # Instala o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -34,4 +35,5 @@ RUN a2enmod rewrite
 # Porta que o Render usa
 EXPOSE 80
 
-CMD ["apache2-foreground"]
+# Comando para rodar as tabelas E ligar o servidor (Solução para o Shell bloqueado)
+CMD php artisan migrate --force && apache2-foreground
