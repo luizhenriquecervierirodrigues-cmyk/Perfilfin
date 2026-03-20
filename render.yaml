@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: Perfilfin
+    runtime: php
+    buildCommand: composer install --no-dev && php artisan optimize
+    startCommand: php artisan serve --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: APP_DEBUG
+        value: "true"
